@@ -27,22 +27,20 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
-    var dataList = ArrayList < MydataItem > ()
+    var dataList = ArrayList<MyDataModel>()
     lateinit var recyclerView: RecyclerView
     var myAdapter: CustomAdapter ? = null
     val Base="https://jsonplaceholder.typicode.com/"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         recyclerView = findViewById(R.id.reuse)
-        myAdapter = CustomAdapter(ViewModel, this)
-        recyclerView.adapter = myAdapter
 
 
         getData()
-
     }
 
     private fun getData() {
@@ -53,8 +51,8 @@ class MainActivity : AppCompatActivity() {
             .create(ApiInterface::class.java)
         var retroData=retrofitBuilder.getData()
 
-        retroData.enqueue(object : Callback<List<MydataItem>?>{
-            override fun onResponse(call: Call<List<MydataItem>?>, response: retrofit2.Response<List<MydataItem>?>)
+        retroData.enqueue(object : Callback<List<MyDataModel>?>{
+            override fun onResponse(call: Call<List<MyDataModel>?>, response: retrofit2.Response<List<MyDataModel>?>)
             {
                 var Res = response.body()
                 var mystr= StringBuilder()
@@ -66,16 +64,15 @@ class MainActivity : AppCompatActivity() {
                         mystr.append(Mydata.title)
                         mystr.append(" ")
                        mystr.append("\n")
-                      /*  if(Mydata.id%10==0)
-                            mystr.append("\n")*/
-
                     }
                 }
+                myAdapter = CustomAdapter(Res!!)
+                recyclerView.adapter = myAdapter
 
                 binding.ans.text=mystr
             }
 
-            override fun onFailure(call: Call<List<MydataItem>?>, t: Throwable) {
+            override fun onFailure(call: Call<List<MyDataModel>?>, t: Throwable) {
                 Log.d("MainActivity","onFailure"+t.message)
             }
 
