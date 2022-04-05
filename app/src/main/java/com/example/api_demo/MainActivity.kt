@@ -36,10 +36,6 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        recyclerView = findViewById(R.id.reuse)
-        myAdapter = CustomAdapter(ViewModel, this)
-        recyclerView.adapter = myAdapter
-
 
         getData()
 
