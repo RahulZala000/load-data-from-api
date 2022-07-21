@@ -15,6 +15,8 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.api_demo.databinding.ActivityMainBinding
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONArray
 import org.json.JSONException
 import retrofit2.Call
@@ -23,6 +25,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.StringBuilder
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         recyclerView = findViewById(R.id.reuse)
 
 
@@ -44,8 +48,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getData() {
+
+        val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+        var client: OkHttpClient=OkHttpClient
+            .Builder()
+            .readTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(logging)
+            .build()
+
+
         var retrofitBuilder=Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .baseUrl(Base)
             .build()
             .create(ApiInterface::class.java)
